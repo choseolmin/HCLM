@@ -6,8 +6,7 @@ import { formatEther, parseEther, parseUnits, zeroAddress } from 'viem'
 import { ADDR } from './addresses'
 import { parseAbiItem } from 'viem';
 import { useState, useEffect } from 'react'
-import { formatUnits } from 'viem'
-import { HCLM_ABI, VAULT_ABI, POOL_ABI, SALE_ABI } from './abi'
+import { HCLM_ABI, POOL_ABI, SALE_ABI } from './abi'
 import './index.css'
 
 function format18(n?: bigint) {
@@ -17,7 +16,7 @@ function format18(n?: bigint) {
 
 export default function App() {
   const { address, chainId, isConnected } = useAccount()
-  const { connect, connectors, isPending: isConnectPending } = useConnect()
+  const { connect, isPending: isConnectPending } = useConnect()
   const { disconnect } = useDisconnect()
   const { switchChain } = useSwitchChain()
   const publicClient = usePublicClient()
@@ -81,11 +80,7 @@ export default function App() {
     abi: SALE_ABI,
     functionName: 'perWalletCapETH',
   })
-  const { data: saleGlobalCap } = useReadContract({
-    address: ADDR.SALE,
-    abi: SALE_ABI,
-    functionName: 'globalCapETH',
-  })
+
   const { data: saleMineIn } = useReadContract({
     address: ADDR.SALE,
     abi: SALE_ABI,
@@ -131,21 +126,6 @@ export default function App() {
     if (!publicClient) return
     await publicClient.waitForTransactionReceipt({ hash: txHash })
     await refreshAll()
-  }
-
-  async function getDebtsNow(user: `0x${string}`) {
-    const [p, i] = await publicClient!.readContract({
-      address: ADDR.POOL, abi: POOL_ABI, functionName: 'debts', args: [user],
-    }) as readonly [bigint, bigint, bigint] as unknown as [bigint, bigint]
-    return { principal: p, interest: i, total: p + i }
-  }
-  async function repayExact(amount: bigint) {
-    if (amount <= 0n) return
-    await ensureApproveVault(amount)
-    const tx = await writeContractAsync({
-      address: ADDR.POOL, abi: POOL_ABI, functionName: 'repay', args: [amount],
-    })
-    await publicClient!.waitForTransactionReceipt({ hash: tx })
   }
   
   
@@ -381,8 +361,7 @@ async function onClosePosition() {
     rewardIdx: bigint    // 보상 인덱스
   }
   
-  const [snap, setSnap] = useState<Snap | null>(null)
-  const fmt18 = (x?: bigint) => formatUnits(x ?? 0n, 18)
+  const [, setSnap] = useState<Snap | null>(null)
   
   // ---- [추가] 한 번에 모든 값 읽는 갱신 함수 ----
   async function refreshAll() {
