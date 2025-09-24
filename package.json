@@ -1,0 +1,28 @@
+{
+  "name": "hclm-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.10.0"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run script/deploy.ts --network sepolia",
+    "verify:sepolia": "hardhat run script/verify.ts --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-mocha": "^3.0.2",
+    "@nomicfoundation/hardhat-toolbox-viem": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "^3.0.2",
+    "@nomicfoundation/hardhat-viem": "^3.0.0",
+    "hardhat": "3.0.6",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5",
+    "viem": "^2.30.0"
+  }
+}

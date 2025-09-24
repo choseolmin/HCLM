@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "ESNext",
+      "moduleResolution": "Bundler",
+      "strict": true,
+      "resolveJsonModule": true,
+      "types": ["node", "hardhat", "@nomicfoundation/hardhat-viem"]
+    },
+    "include": ["./script", "./test", "./hardhat.config.ts", "./contracts"]
+  }
+  
